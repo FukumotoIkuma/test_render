@@ -55,6 +55,8 @@ def webhook_get():
     # pprintで整形した文字列を作成
     formatted_response = pformat(response, indent=4)
 
+    print(formatted_response)
+
     return f"<pre>{formatted_response}</pre>"
 if __name__ == '__main__':
     
