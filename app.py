@@ -1,6 +1,8 @@
 from flask import Flask, request
 import requests
 import json
+from pprint import pformat
+
 
 def webhook(event,url,body=None):#bodyを少し変えたい場合body変数を使う
     method = event.method
@@ -41,7 +43,19 @@ app = Flask(__name__)
 def main():
     return "Hello World!"
 
+@app.route("/webhook",methods = ["GET","POST"])
+def webhook_get():
+    if request.method == "GET":
+        # クエリパラメータを取得
+        response = request.args.to_dict()
+    elif request.method == "POST":
+        # JSONペイロードを取得
+        response = request.get_json()
 
+    # pprintで整形した文字列を作成
+    formatted_response = pformat(response, indent=4)
+
+    return f"<pre>{formatted_response}</pre>"
 if __name__ == '__main__':
     
     app.run(port=3000)
