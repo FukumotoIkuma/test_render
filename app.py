@@ -1,37 +1,18 @@
 from os import PathLike
 from flask import Flask, request,jsonify,make_response
 from pprint import pformat
-import hmac
-import hashlib
+from system import create_hmac_sha256
 import os
 
 app = Flask(__name__)
 show_text = "no webhook"
+
 
 #環境変数の読み込み
 try:#ローカル
     import secret_key
 except:#鯖
     SECRET_KEY =  os.getenv('SECRET_KEY')
-
-def create_hmac_sha256(secret, plainToken):
-    """
-    HMAC SHA-256 ハッシュを作成する関数。
-    
-    :param secret: Webhook のシークレットトークン（ソルトとして使用）
-    :param plainToken: ハッシュする文字列
-    :return: HMAC SHA-256 ハッシュの 16 進数表現
-    """
-    # シークレットとプレーンテキストをバイト型に変換
-    secret_bytes = secret.encode('utf-8')
-    plainToken_bytes = plainToken.encode('utf-8')
-    
-    # HMAC SHA-256 ハッシュを計算
-    hmac_hash = hmac.new(secret_bytes, plainToken_bytes, hashlib.sha256)
-    
-    # ハッシュを 16 進数表現で返す
-    return hmac_hash.hexdigest()
-
 
 @app.route("/",methods = ['GET'])
 def home():
@@ -65,5 +46,4 @@ def newest_webhook():
     return show_text
 
 if __name__ == '__main__':
-    
     app.run(port=3000)
