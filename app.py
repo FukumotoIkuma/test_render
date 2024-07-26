@@ -10,7 +10,7 @@ show_text = "no webhook"
 
 #環境変数の読み込み
 try:#ローカル
-    import secret_key
+    from secret_key import SECRET_KEY
 except:#鯖
     SECRET_KEY =  os.getenv('SECRET_KEY')
 
