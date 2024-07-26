@@ -1,6 +1,6 @@
 import hmac
 import hashlib
-def create_hmac_sha256(self,secret, plainToken):
+def create_hmac_sha256(secret, plainToken):
     """
     HMAC SHA-256 ハッシュを作成する関数。
     
