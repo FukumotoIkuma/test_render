@@ -5,7 +5,7 @@ from system import create_hmac_sha256
 import os
 
 app = Flask(__name__)
-show_text = "no webhook"
+show_text = ["no webhook"]
 
 
 #環境変数の読み込み
@@ -26,7 +26,7 @@ def webhook():
     # クエリパラメータを取得
     data = request.get_json()
     global show_text
-    show_text = pformat(data, indent=4)
+    show_text.append(pformat(data, indent=4))
 
     if data["event"] == "endpoint.url_validation":
         plainToken = data["payload"]["plainToken"]
@@ -45,5 +45,9 @@ def newest_webhook():
     global show_text
     return show_text
 
+@app.route("/clear")
+def clear():
+    global show_text
+    show_text = []
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=6000)
