@@ -6,8 +6,10 @@ import os
 from send_sms import ZoomAPI,send_sms
 
 #.envを読み込み（ローカル用）
-from dotenv import load_dotenv
-load_dotenv()
+local = False
+if local:
+    from dotenv import load_dotenv
+    load_dotenv()
 
 app = Flask(__name__)
 show_text = ["no webhook"]
