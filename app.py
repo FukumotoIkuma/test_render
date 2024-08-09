@@ -5,6 +5,9 @@ import os
 
 from send_sms import ZoomAPI,send_sms
 
+#.envを読み込み（ローカル用）
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 show_text = ["no webhook"]
@@ -12,12 +15,7 @@ zoom_api = ZoomAPI()
 
 
 #環境変数の読み込み
-try:#ローカル
-    local = True
-    from secret_key import SECRET_KEY
-except:#鯖
-    local = False
-    SECRET_KEY =  os.getenv('SECRET_KEY')
+ZOOM_SECRET_TOKEN =  os.getenv('ZOOM_SECRET_TOKEN')
 
 @app.route("/",methods = ['GET'])
 def home():
@@ -39,7 +37,7 @@ def webhook():
         plainToken = payload["plainToken"]
         res_json = {
             "plainToken": plainToken,
-            "encryptedToken": create_hmac_sha256(SECRET_KEY,plainToken)
+            "encryptedToken": create_hmac_sha256(ZOOM_SECRET_TOKEN,plainToken)
         }
         res =jsonify(res_json)
         res.status_code = 200
@@ -72,7 +70,4 @@ def clear():
     return "completely finished"
     
 if __name__ == '__main__':
-    if local:
-        app.run()
-    else:
-        app.run(port=6000)
+    app.run(port=5000)

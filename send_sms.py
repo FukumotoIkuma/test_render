@@ -7,24 +7,18 @@ from datetime import datetime, timedelta
 import boto3#requirement
 import os
 
-try:#ローカル
-    from SMS_SECRET_INFO import ZOOM_CLIENT_ID,ZOOM_CLIENT_SECRET,ZOOM_ACCOUNT_ID,AWS_ACCESS_KEY,AWS_SECRET_KEY
-except:#鯖
-    ZOOM_CLIENT_ID      =  os.getenv('ZOOM_CLIENT_ID')
-    ZOOM_CLIENT_SECRET  =  os.getenv('ZOOM_CLIENT_SECRET')
-    ZOOM_ACCOUNT_ID     =  os.getenv('ZOOM_ACCOUNT_ID')
-    AWS_ACCESS_KEY      =  os.getenv('AWS_ACCESS_KEY')
-    AWS_SECRET_KEY      =  os.getenv('AWS_SECRET_KEY')
-
 
 class ZoomTokenMaker:
     def __init__(self):
         self._token = None
         self.token_creation_time = None
+        self.ZOOM_CLIENT_ID = os.getenv('ZOOM_CLIENT_ID')
+        self.ZOOM_CLIENT_SECRET  = os.getenv('ZOOM_CLIENT_SECRET')
+        self.ZOOM_ACCOUNT_ID = os.getenv('ZOOM_ACCOUNT_ID')
 
     def generate_token(self):
         # クライアントIDとクライアントシークレットをbase64形式でエンコード
-        client_credentials = f"{ZOOM_CLIENT_ID}:{ZOOM_CLIENT_SECRET}"
+        client_credentials = f"{self.ZOOM_CLIENT_ID}:{self.ZOOM_CLIENT_SECRET}"
         encoded_credentials = base64.b64encode(client_credentials.encode()).decode()
 
         # ヘッダーの設定
@@ -36,7 +30,7 @@ class ZoomTokenMaker:
         # ボディの設定
         body = {
             "grant_type": "account_credentials",
-            "account_id": ZOOM_ACCOUNT_ID
+            "account_id": self.ZOOM_ACCOUNT_ID
         }
 
         # トークンAPIのエンドポイント
@@ -189,6 +183,8 @@ def send_sms(phone_number:str, message:str,sender_name:str="send-Test"):
     'StringValue': sender_name # 通知者表示に使用される送信者ID
     }
     }
+    AWS_ACCESS_KEY      =  os.getenv('AWS_ACCESS_KEY')
+    AWS_SECRET_KEY      =  os.getenv('AWS_SECRET_KEY')
     
 
     sns = boto3.client(
